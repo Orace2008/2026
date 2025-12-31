@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonne Année 2026 - Vœux Élégants & Festifs</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎉</text></svg>">
+</head>
+<body>
+    <!-- Feux d'artifice -->
+    <div id="fireworks"></div>
+    
+    <!-- Confettis -->
+    <div id="confetti-container"></div>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-title-line">Bonne Année</span>
+                    <span class="hero-year" id="dynamic-year">2026</span>
+                    <span class="hero-emoji">🎉</span>
+                </h1>
+                <p class="hero-subtitle">Orace vous souhaite le bonheur, la santé et la  réussite</p>
+                <div class="cta-button-container">
+                    <a href="#wishes" class="cta-button">
+                        <span>Découvrir les vœux</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Vœux -->
+    <section class="wishes-section" id="wishes">
+        <div class="container">
+            <h2 class="section-title">Mes Vœux pour <span class="highlight">2026</span></h2>
+            <p class="section-subtitle">Que cette année soit remplie de moments précieux et de succès</p>
+            
+            <div class="wishes-grid">
+                <div class="wish-card" data-animation="fade-up">
+                    <div class="card-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="card-title">Bonheur</h3>
+                    <p class="card-text">Que chaque jour de 2026 vous apporte son lot de joie, de rires et de moments heureux en compagnie de vos proches.</p>
+                    <div class="card-decoration"></div>
+                </div>
+                
+                <div class="wish-card" data-animation="fade-up" data-delay="100">
+                    <div class="card-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="card-title">Santé</h3>
+                    <p class="card-text">Une santé florissante et une énergie débordante pour réaliser tous vos projets et profiter pleinement de la vie.</p>
+                    <div class="card-decoration"></div>
+                </div>
+                
+                <div class="wish-card" data-animation="fade-up" data-delay="200">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="card-title">Réussite</h3>
+                    <p class="card-text">Que vos ambitions se concrétisent, vos efforts soient récompensés et chaque challenge soit une opportunité de croissance.</p>
+                    <div class="card-decoration"></div>
+                </div>
+                
+                <div class="wish-card" data-animation="fade-up" data-delay="300">
+                    <div class="card-icon">
+                        <i class="fas fa-dove"></i>
+                    </div>
+                    <h3 class="card-title">Paix</h3>
+                    <p class="card-text">Une année de sérénité, d'harmonie et de paix intérieure pour naviguer sereinement à travers les moments de la vie.</p>
+                    <div class="card-decoration"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Message Spécial -->
+    <section class="message-section" id="message">
+        <div class="message-overlay"></div>
+        <div class="container">
+            <div class="message-content">
+                <h2 class="section-title section-title-light">Message Spécial</h2>
+                <div class="typewriter-container">
+                    <p class="typewriter-text" id="typewriter-text">
+                        En cette nouvelle année, que chaque aube vous apporte l'espoir, chaque journée vous offre l'opportunité et chaque crépuscule vous laisse avec un sentiment d'accomplissement. 
+                        <br><br>
+                        Que 2026 soit le chapitre où vos rêves les plus chers se réalisent et où chaque moment partagé devient un souvenir précieux. 
+                        <br><br>
+                        Puissiez-vous rayonner de bonheur et inspirer ceux qui vous entourent.
+                    </p>
+                </div>
+                <div class="signature">
+                    <p>Avec toute mon affection</p>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Compte à Rebours -->
+    <section class="countdown-section" id="countdown">
+        <div class="container">
+            <h2 class="section-title">Compte à rebours pour <span class="highlight">2027</span></h2>
+            <p class="section-subtitle">Chaque instant est précieux, célébrons le temps qui nous est offert</p>
+            
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">Jours</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">Heures</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">Secondes</div>
+                </div>
+            </div>
+            
+            <p class="countdown-message">Le meilleur est encore à venir...</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Bonne Année <span class="year">2026</span></h3>
+                    <p>Que cette année soit exceptionnelle</p>
+                </div>
+                
+                <div class="footer-message">
+                    <p>Merci de faire partie de cette merveilleuse aventure. Je vous souhaite une année rayonnante et épanouissante.</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">© <span id="current-year">2026</span> Vœux de Bonne Année. Tous mes meilleurs vœux.</p>
+                <p class="footer-note">Conçu par Orace ATTINMAWASSONOU <i class="fas fa-heart heart-icon"></i> pour une année exceptionnelle</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bouton retour en haut -->
+    <button id="back-to-top" aria-label="Retour en haut">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
