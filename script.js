@@ -28,25 +28,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // =========================================
-// ANNÉE DYNAMIQUE
+// ANNÉE DYNAMIQUE - CORRECTION
 // =========================================
 function setDynamicYear() {
-    const currentYear = new Date().getFullYear();
-    const nextYear = currentYear + 1;
+    // LE SITE EST TOUJOURS POUR 2026
+    const SITE_YEAR = 2026;
     
-    // Mettre à jour toutes les occurrences de l'année
-    document.getElementById('dynamic-year').textContent = nextYear;
-    document.querySelectorAll('.year').forEach(el => el.textContent = nextYear);
-    document.getElementById('current-year').textContent = nextYear;
+    // Mettre à jour toutes les occurrences de l'année avec 2026
+    document.getElementById('dynamic-year').textContent = SITE_YEAR;
+    document.querySelectorAll('.year').forEach(el => el.textContent = SITE_YEAR);
+    document.getElementById('current-year').textContent = SITE_YEAR;
     
-    // Mettre à jour le compte à rebours pour la prochaine année
-    document.querySelectorAll('.highlight').forEach(el => {
+    // Mettre à jour les vœux
+    document.querySelectorAll('.section-title .highlight').forEach(el => {
+        if (el.textContent.match(/\d{4}/)) {
+            el.textContent = SITE_YEAR;
+        }
+    });
+    
+    // Mettre à jour les sous-titres
+    const subtitles = document.querySelectorAll('.section-subtitle');
+    subtitles.forEach(el => {
         if (el.textContent.includes('2026') || el.textContent.includes('2027')) {
-            el.textContent = nextYear;
+            el.textContent = el.textContent.replace(/\d{4}/, SITE_YEAR);
         }
     });
 }
-
 // =========================================
 // FEUX D'ARTIFICE
 // =========================================
@@ -167,7 +174,7 @@ function initConfetti() {
 }
 
 // =========================================
-// COMPTE À REBOURS
+// COMPTE À REBOURS - LOGIQUE CORRECTE
 // =========================================
 function initCountdown() {
     const daysElement = document.getElementById('days');
@@ -175,25 +182,53 @@ function initCountdown() {
     const minutesElement = document.getElementById('minutes');
     const secondsElement = document.getElementById('seconds');
     
+    // IMPORTANT : Le site s'appelle "Bonne Année 2026"
+    // Donc nous souhaitons une bonne année 2026
+    // Le compte à rebours est pour le PROCHAIN Nouvel An
+    
     function updateCountdown() {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        const nextYear = currentYear + 1;
-        const nextYearDate = new Date(`January 1, ${nextYear} 00:00:00`);
         
-        const timeDifference = nextYearDate - currentDate;
+        // Déterminer la date du PROCHAIN Nouvel An
+        let nextNewYearDate;
         
-        // Calculer les jours, heures, minutes, secondes
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+        // Si nous sommes AVANT le 1er janvier de l'année en cours
+        // (entre le 2 janvier et le 31 décembre)
+        const jan1stCurrentYear = new Date(`January 1, ${currentYear} 00:00:00`);
         
-        // Mettre à jour les éléments avec animation
+        if (currentDate < jan1stCurrentYear) {
+            // Cas spécial : nous sommes entre le 1er et le 2 janvier à minuit
+            // Le prochain Nouvel An est celui de l'année en cours
+            nextNewYearDate = jan1stCurrentYear;
+        } else {
+            // Nous sommes après le 1er janvier, donc le prochain Nouvel An est l'année suivante
+            nextNewYearDate = new Date(`January 1, ${currentYear + 1} 00:00:00`);
+        }
+        
+        const timeDifference = nextNewYearDate - currentDate;
+        const targetYear = nextNewYearDate.getFullYear();
+        
+        // Mettre à jour l'affichage de l'année cible
+        document.querySelectorAll('.countdown-section .highlight').forEach(el => {
+            el.textContent = targetYear;
+        });
+        
+        // Calculer le temps restant
+        const totalSeconds = Math.max(0, Math.floor(timeDifference / 1000));
+        const days = Math.floor(totalSeconds / (3600 * 24));
+        const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        
+        // Mettre à jour l'affichage
         updateElementWithAnimation(daysElement, days.toString().padStart(2, '0'));
         updateElementWithAnimation(hoursElement, hours.toString().padStart(2, '0'));
         updateElementWithAnimation(minutesElement, minutes.toString().padStart(2, '0'));
         updateElementWithAnimation(secondsElement, seconds.toString().padStart(2, '0'));
+        
+        // Messages selon le temps restant
+        updateCountdownMessage(days, hours, minutes, seconds, targetYear);
     }
     
     function updateElementWithAnimation(element, newValue) {
@@ -207,9 +242,251 @@ function initCountdown() {
         }
     }
     
-    // Mettre à jour immédiatement puis toutes les secondes
+    function updateCountdownMessage(days, hours, minutes, seconds, targetYear) {
+        const messageElement = document.querySelector('.countdown-message');
+        
+        if (!messageElement) return;
+        
+        // Réinitialiser les styles
+        messageElement.style.color = '';
+        messageElement.style.fontWeight = '';
+        messageElement.style.animation = '';
+        
+        if (days > 60) {
+            messageElement.textContent = `Le compte à rebours pour ${targetYear} a commencé !`;
+        } else if (days > 30) {
+            messageElement.textContent = `Plus que ${days} jours avant ${targetYear} !`;
+        } else if (days > 7) {
+            messageElement.textContent = `Plus que ${days} jours ! Préparez-vous pour ${targetYear} !`;
+        } else if (days > 1) {
+            messageElement.textContent = `Plus que ${days} jours avant le Nouvel An ${targetYear} !`;
+        } else if (days === 1) {
+            messageElement.textContent = `Dernier jour avant ${targetYear} ! Préparez les célébrations !`;
+            messageElement.style.color = "var(--gold)";
+        } else if (days === 0 && hours > 12) {
+            messageElement.textContent = `C'est aujourd'hui ! ${targetYear} arrive ce soir !`;
+            messageElement.style.color = "var(--gold)";
+        } else if (days === 0 && hours > 6) {
+            messageElement.textContent = `Plus que ${hours} heures avant ${targetYear} !`;
+            messageElement.style.color = "var(--gold)";
+            messageElement.style.fontWeight = "bold";
+        } else if (days === 0 && hours > 1) {
+            messageElement.textContent = `Plus que ${hours} heures et ${minutes} minutes !`;
+            messageElement.style.color = "var(--red-light)";
+            messageElement.style.fontWeight = "bold";
+        } else if (days === 0 && hours === 1) {
+            messageElement.textContent = `Dernière heure avant ${targetYear} !`;
+            messageElement.style.color = "var(--red-light)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 1s infinite";
+        } else if (days === 0 && hours === 0 && minutes > 10) {
+            messageElement.textContent = `Plus que ${minutes} minutes ! Tenez-vous prêts !`;
+            messageElement.style.color = "var(--red-light)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 0.5s infinite";
+        } else if (days === 0 && hours === 0 && minutes > 1) {
+            messageElement.textContent = `Dernières minutes avant ${targetYear} !`;
+            messageElement.style.color = "var(--red)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 0.3s infinite";
+        } else if (days === 0 && hours === 0 && minutes === 1) {
+            messageElement.textContent = `Dernière minute !!!`;
+            messageElement.style.color = "var(--red)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 0.2s infinite";
+        } else if (days === 0 && hours === 0 && minutes === 0 && seconds > 10) {
+            messageElement.textContent = `${seconds}...`;
+            messageElement.style.color = "var(--red)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 0.1s infinite";
+        } else if (days === 0 && hours === 0 && minutes === 0 && seconds > 0) {
+            messageElement.textContent = `${seconds}...`;
+            messageElement.style.color = "var(--red)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.fontSize = "1.5rem";
+            messageElement.style.animation = "pulse 0.1s infinite";
+        } else if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+            // C'EST LE NOUVEL AN !
+            messageElement.innerHTML = `🎉 <strong>BONNE ANNÉE ${targetYear} !</strong> 🎉`;
+            messageElement.style.color = "var(--gold)";
+            messageElement.style.fontWeight = "bold";
+            messageElement.style.animation = "pulse 0.5s infinite, glow 2s infinite";
+            
+            // Mettre à jour le site pour la nouvelle année
+            celebrateNewYear(targetYear);
+        } else {
+            messageElement.textContent = "Le meilleur est encore à venir...";
+        }
+    }
+    
+    function celebrateNewYear(newYear) {
+        // Mettre à jour toutes les années sur le site
+        document.querySelectorAll('.hero-year, .year, #current-year, #dynamic-year').forEach(el => {
+            el.textContent = newYear;
+        });
+        
+        // Mettre à jour les vœux
+        document.querySelectorAll('.section-title .highlight, .section-subtitle').forEach(el => {
+            if (el.textContent.includes('2026') || el.textContent.includes('2027')) {
+                el.textContent = el.textContent.replace(/\d{4}/, newYear);
+            }
+        });
+        
+        // Feux d'artifice massifs
+        launchFireworks(100);
+        
+        // Confettis
+        launchConfetti(300);
+        
+        // Jouer un son (optionnel)
+        playNewYearSound();
+    }
+    
+    function launchFireworks(count) {
+        const container = document.getElementById('fireworks');
+        if (!container) return;
+        
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                
+                // Position aléatoire
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight * 0.8 + window.innerHeight * 0.2;
+                
+                // Couleurs festives
+                const colors = ['#D4AF37', '#F4E8C1', '#C62828', '#E53935', '#FFFFFF', '#1A2C50'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Taille
+                const size = Math.random() * 10 + 5;
+                
+                // Appliquer styles
+                firework.style.left = `${x}px`;
+                firework.style.top = `${y}px`;
+                firework.style.backgroundColor = color;
+                firework.style.width = `${size}px`;
+                firework.style.height = `${size}px`;
+                firework.style.setProperty('--explode-y', `${y - Math.random() * 400 - 200}px`);
+                
+                container.appendChild(firework);
+                
+                // Nettoyer
+                setTimeout(() => {
+                    if (firework.parentNode) {
+                        firework.parentNode.removeChild(firework);
+                    }
+                }, 2000);
+            }, i * 50);
+        }
+    }
+    
+    function launchConfetti(count) {
+        const container = document.getElementById('confetti-container');
+        if (!container) return;
+        
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Position
+                const x = Math.random() * window.innerWidth;
+                
+                // Couleur
+                const colors = ['#D4AF37', '#F4E8C1', '#C62828', '#E53935', '#FFFFFF'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Taille et forme
+                const size = Math.random() * 12 + 3;
+                const isRound = Math.random() > 0.5;
+                const duration = Math.random() * 4 + 2;
+                
+                // Styles
+                confetti.style.left = `${x}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${isRound ? size : size / 3}px`;
+                confetti.style.borderRadius = isRound ? '50%' : '2px';
+                confetti.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(confetti);
+                
+                // Nettoyer
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, duration * 1000);
+            }, i * 20);
+        }
+    }
+    
+    function playNewYearSound() {
+        // Créer un son de célébration simple (optionnel)
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.5);
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 1);
+        } catch (e) {
+            console.log("Audio non supporté ou désactivé");
+        }
+    }
+    
+    // Initialiser
     updateCountdown();
     setInterval(updateCountdown, 1000);
+}
+// =========================================
+// FONCTION FEU D'ARTIFICE (à ajouter si elle n'existe pas)
+// =========================================
+function createFirework() {
+    const fireworksContainer = document.getElementById('fireworks');
+    
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    
+    // Position aléatoire
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    
+    // Couleur aléatoire
+    const colors = ['#D4AF37', '#F4E8C1', '#C62828', '#E53935', '#FFFFFF', '#1A2C50'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Taille aléatoire
+    const size = Math.random() * 8 + 3;
+    
+    // Appliquer les styles
+    firework.style.left = `${x}px`;
+    firework.style.top = `${y}px`;
+    firework.style.backgroundColor = color;
+    firework.style.width = `${size}px`;
+    firework.style.height = `${size}px`;
+    firework.style.setProperty('--explode-y', `${y - Math.random() * 300 - 100}px`);
+    
+    // Ajouter au conteneur
+    fireworksContainer.appendChild(firework);
+    
+    // Supprimer après l'animation
+    setTimeout(() => {
+        if (firework.parentNode) {
+            firework.parentNode.removeChild(firework);
+        }
+    }, 1500);
 }
 
 // =========================================
